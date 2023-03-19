@@ -1,12 +1,14 @@
 <script lang="ts">
+	let name = '';
 	let data = '';
 	function addData() {
 		// TODO: function should store the data somewhere for use later
 	}
 </script>
 
-<h1>Paste your csv data into the text box</h1>
+<h1>Add Data</h1>
 <form on:submit={addData}>
+	<input placeholder="Name" bind:value={name} />
 	<textarea bind:value={data} />
 	<button type="submit">Submit</button>
 </form>
