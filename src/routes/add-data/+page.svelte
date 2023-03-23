@@ -1,21 +1,34 @@
 <script lang="ts">
+	type Column = '' | 'date' | 'category' | 'amount';
+
 	let name = '';
 	let data = '';
 	let lines = [];
 	let headers: string[] = [];
+	let mappedHeaders: Column[] = [];
+	let validData: boolean;
+
 	function processData() {
-		// TODO: function should store the data somewhere for use later
-		// Take the first row of data and display it for mapping to the required data columns
 		lines = data.split(/\r?\n/);
 		headers = lines[0].split(',');
+		mappedHeaders = new Array(headers.length);
+		mappedHeaders.fill('');
 	}
 	function storeData() {
-		// TODO
+		let countObj = { date: 0, category: 0, amount: 0 };
+		for (let value of mappedHeaders) {
+			if (value !== '') countObj[value]++;
+		}
+		if (countObj.date !== 1 || countObj.category !== 1 || countObj.amount !== 1) {
+			return (validData = false);
+		}
+		validData = true;
+		// TODO: process the input data and attach it to the user's name using Rust
 	}
 </script>
 
 <h1>Add Data</h1>
-<form on:submit={processData}>
+<form on:submit|preventDefault={processData}>
 	<input placeholder="Enter Your Name" bind:value={name} />
 	<p>Paste your data in csv format with headers</p>
 	<textarea bind:value={data} />
@@ -34,14 +47,15 @@
 			</tr>
 		</thead>
 		<tbody>
-			{#each headers as header}
+			{#each headers as header, i}
 				<tr>
 					<td data-userHeader={header}>{header}</td>
 					<td>
-						<select>
+						<select bind:value={mappedHeaders[i]}>
+							<option value="" selected>None</option>
 							<option value="date">Date</option>
 							<option value="category">Category</option>
-							<option value="value">Value</option>
+							<option value="amount">Amount</option>
 						</select>
 					</td>
 				</tr>
@@ -49,6 +63,11 @@
 		</tbody>
 	</table>
 	<button on:click={storeData}>Confirm</button>
+{/if}
+{#if validData === false}
+	<p>Please ensure that the 3 given data columns are mapped to one header each</p>
+{:else if validData === true}
+	<p>Data is valid!</p>
 {/if}
 
 <br />
