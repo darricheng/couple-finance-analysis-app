@@ -3,14 +3,14 @@
 
 	let name = '';
 	let data = '';
-	let lines = [];
 	let headers: string[] = [];
 	let mappedHeaders: Column[] = [];
 	let validData: boolean;
+	let endOfHeaders = 0;
 
 	function processData() {
-		lines = data.split(/\r?\n/);
-		headers = lines[0].split(',');
+		endOfHeaders = data.search(/\r?\n/);
+		headers = data.slice(0, endOfHeaders).split(',');
 		mappedHeaders = new Array(headers.length);
 		mappedHeaders.fill('');
 	}
