@@ -63,6 +63,8 @@
 		</tbody>
 	</table>
 	<button on:click={storeData}>Confirm</button>
+{:else}
+	<p>Your input data needs at least 3 columns to map to Date, Category, and Amount.</p>
 {/if}
 {#if validData === false}
 	<p>Please ensure that the 3 given data columns are mapped to one header each</p>
