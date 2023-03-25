@@ -24,6 +24,8 @@
 		}
 		validData = true;
 		// TODO: process the input data and attach it to the user's name using Rust
+		let validCsv = mappedHeaders.join(',') + data.slice(endOfHeaders);
+		console.log(validCsv);
 	}
 </script>
 
