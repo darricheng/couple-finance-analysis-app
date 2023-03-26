@@ -28,7 +28,7 @@
 		// TODO: process the input data and attach it to the user's name using Rust
 		let validCsv = mappedHeaders.join(',') + data.slice(endOfHeaders);
 		console.log(validCsv);
-		invoke('parse_csv_to_state', { csvData: validCsv });
+		invoke('parse_csv_to_state', { csvData: validCsv, name });
 	}
 </script>
 

@@ -4,7 +4,7 @@ use csv;
 use serde::Deserialize;
 
 #[derive(Debug, Deserialize)]
-struct FinanceRecord {
+pub struct FinanceRecord {
     date: String,
     category: String,
     amount: f64,
@@ -22,9 +22,10 @@ fn test(foo: String) -> Result<Vec<FinanceRecord>, Box<dyn Error>> {
 }
 
 #[tauri::command]
-pub fn parse_csv_to_state(csv_data: String) {
-    println!("{csv_data}");
+pub fn parse_csv_to_state(name: String, csv_data: String, state: tauri::State<super::State>) {
     let finance_records = test(csv_data).unwrap();
-    println!("{finance_records:?}");
+    let user = super::UserRecords::new(name, finance_records);
+    state.0.lock().unwrap().push(user);
+    println!("{state:?}");
     // todo!()
 }
