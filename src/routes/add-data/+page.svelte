@@ -37,8 +37,6 @@
 	<button type="submit">Submit</button>
 </form>
 
-<!-- https://stackoverflow.com/a/30593806 -->
-<!-- <p style="white-space: pre-line;">{data}</p> -->
 {#if headers.length >= 3}
 	<h2>Map your columns to the required data columns</h2>
 	<table>
