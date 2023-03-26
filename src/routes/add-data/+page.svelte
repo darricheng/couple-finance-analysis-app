@@ -1,4 +1,6 @@
 <script lang="ts">
+	import { invoke } from '@tauri-apps/api/tauri';
+
 	type Column = '' | 'date' | 'category' | 'amount';
 
 	let name = '';
@@ -26,6 +28,7 @@
 		// TODO: process the input data and attach it to the user's name using Rust
 		let validCsv = mappedHeaders.join(',') + data.slice(endOfHeaders);
 		console.log(validCsv);
+		invoke('parse_csv_to_state', { csv: validCsv });
 	}
 </script>
 
