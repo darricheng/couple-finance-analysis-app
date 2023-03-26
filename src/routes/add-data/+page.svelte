@@ -24,6 +24,9 @@
 		if (countObj.date !== 1 || countObj.category !== 1 || countObj.amount !== 1) {
 			return (validData = false);
 		}
+		if (name === '') {
+			return;
+		}
 		validData = true;
 		let validCsv = mappedHeaders.join(',') + data.slice(endOfHeaders);
 		invoke('parse_csv_to_state', { csvData: validCsv, name });
@@ -67,10 +70,17 @@
 {:else}
 	<p>Your input data needs at least 3 columns to map to Date, Category, and Amount.</p>
 {/if}
-{#if validData === false}
-	<p>Please ensure that the 3 given data columns are mapped to one header each</p>
-{:else if validData === true}
-	<p>Data is valid!</p>
+
+<p>
+	{#if validData === false}
+		Please ensure that the 3 given data columns are mapped to one header each
+	{:else if validData === true}
+		Data is valid!
+	{/if}
+</p>
+
+{#if name === ''}
+	<p>Please enter a name</p>
 {/if}
 
 <br />
