@@ -8,19 +8,7 @@ mod csv_parser;
 use std::sync::Mutex;
 
 #[derive(Debug)]
-struct UserRecords {
-    name: String,
-    finances: Vec<csv_parser::FinanceRecord>,
-}
-
-impl UserRecords {
-    pub fn new(name: String, finances: Vec<csv_parser::FinanceRecord>) -> UserRecords {
-        UserRecords { name, finances }
-    }
-}
-
-#[derive(Debug)]
-pub struct State(Mutex<Vec<UserRecords>>);
+pub struct State(Mutex<Vec<csv_parser::UserRecords>>);
 
 fn main() {
     tauri::Builder::default()

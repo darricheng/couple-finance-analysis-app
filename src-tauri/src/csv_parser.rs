@@ -10,6 +10,18 @@ pub struct FinanceRecord {
     amount: f64,
 }
 
+#[derive(Debug)]
+pub struct UserRecords {
+    name: String,
+    finances: Vec<FinanceRecord>,
+}
+
+impl UserRecords {
+    pub fn new(name: String, finances: Vec<FinanceRecord>) -> UserRecords {
+        UserRecords { name, finances }
+    }
+}
+
 fn test(foo: String) -> Result<Vec<FinanceRecord>, Box<dyn Error>> {
     let mut rdr = csv::Reader::from_reader(foo.as_bytes());
     let mut finance_records = Vec::new();
@@ -24,7 +36,7 @@ fn test(foo: String) -> Result<Vec<FinanceRecord>, Box<dyn Error>> {
 #[tauri::command]
 pub fn parse_csv_to_state(name: String, csv_data: String, state: tauri::State<super::State>) {
     let finance_records = test(csv_data).unwrap();
-    let user = super::UserRecords::new(name, finance_records);
+    let user = UserRecords::new(name, finance_records);
     state.0.lock().unwrap().push(user);
     // todo!()
 }
