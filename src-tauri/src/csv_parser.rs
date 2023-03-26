@@ -26,6 +26,5 @@ pub fn parse_csv_to_state(name: String, csv_data: String, state: tauri::State<su
     let finance_records = test(csv_data).unwrap();
     let user = super::UserRecords::new(name, finance_records);
     state.0.lock().unwrap().push(user);
-    println!("{state:?}");
     // todo!()
 }
