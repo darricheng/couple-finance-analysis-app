@@ -4,7 +4,7 @@ specifiers:
   '@sveltejs/adapter-auto': ^2.0.0
   '@sveltejs/adapter-static': 1.0.0-next.50
   '@sveltejs/kit': ^1.5.0
-  '@tauri-apps/api': ^1.2.0
+  '@tauri-apps/api': 2.0.0-alpha.1
   '@typescript-eslint/eslint-plugin': ^5.45.0
   '@typescript-eslint/parser': ^5.45.0
   eslint: ^8.28.0
@@ -19,7 +19,7 @@ specifiers:
   vite: ^4.0.0
 
 dependencies:
-  '@tauri-apps/api': 1.2.0
+  '@tauri-apps/api': 2.0.0-alpha.1
 
 devDependencies:
   '@sveltejs/adapter-auto': 2.0.0_@sveltejs+kit@1.12.0
@@ -400,8 +400,8 @@ packages:
       - supports-color
     dev: true
 
-  /@tauri-apps/api/1.2.0:
-    resolution: {integrity: sha512-lsI54KI6HGf7VImuf/T9pnoejfgkNoXveP14pVV7XarrQ46rOejIVJLFqHI9sRReJMGdh2YuCoI3cc/yCWCsrw==}
+  /@tauri-apps/api/2.0.0-alpha.1:
+    resolution: {integrity: sha512-KNFNtO67atq2Bl+2+HZOQgYjmqDB42fimFVSkd8yLjU/kO1I0rmhxplKffHlB1Mc9mAqE/VX56tCE3PGAeumAg==}
     engines: {node: '>= 14.6.0', npm: '>= 6.6.0', yarn: '>= 1.19.1'}
     dev: false
 
