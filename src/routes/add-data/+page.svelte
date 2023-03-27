@@ -30,6 +30,7 @@
 		validData = true;
 		let validCsv = mappedHeaders.join(',') + data.slice(endOfHeaders);
 		invoke('parse_csv_to_state', { csvData: validCsv, name });
+		// TODO: handle the returned Result to show relevant success/failure messages to the user
 	}
 </script>
 

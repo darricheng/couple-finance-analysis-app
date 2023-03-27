@@ -34,11 +34,21 @@ fn vectorize_csv(csv_str: String) -> Result<Vec<FinanceRecord>, Box<dyn Error>> 
 }
 
 #[tauri::command]
-pub fn parse_csv_to_state(name: String, csv_data: String, state: tauri::State<super::State>) {
-    let finance_records = vectorize_csv(csv_data).unwrap();
-    let user = UserRecords::new(name, finance_records);
-    state.0.lock().unwrap().push(user);
-    // todo!()
+pub fn parse_csv_to_state(
+    name: String,
+    csv_data: String,
+    state: tauri::State<super::State>,
+) -> Result<Vec<String>, String> {
+    let finance_records = vectorize_csv(csv_data).map_err(|e| e.to_string())?;
+    let data = UserRecords::new(name, finance_records);
+    let mut users_vec = state.0.lock().unwrap();
+    users_vec.push(data);
+
+    let mut names = Vec::new();
+    for user in users_vec.iter() {
+        names.push(user.name.clone())
+    }
+    Ok(names)
 }
 
 #[cfg(test)]
