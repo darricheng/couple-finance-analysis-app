@@ -9,6 +9,7 @@
 	let mappedHeaders: Column[] = [];
 	let validData: boolean;
 	let endOfHeaders = 0;
+	let namesOfAddedData: string[];
 
 	function processData() {
 		endOfHeaders = data.search(/\r?\n/);
@@ -29,14 +30,42 @@
 		}
 		validData = true;
 		let validCsv = mappedHeaders.join(',') + data.slice(endOfHeaders);
-		invoke('parse_csv_to_state', { csvData: validCsv, name });
+
 		// TODO: handle the returned Result to show relevant success/failure messages to the user
+		invoke('parse_csv_to_state', { csvData: validCsv, name })
+			.then((value) => {
+				if (Array.isArray(value) && typeof value[0] === 'string') {
+					// Clear fields
+					name = '';
+					data = '';
+					headers = [];
+					mappedHeaders = [];
+
+					// Show names of already input data
+					namesOfAddedData = value;
+				} else {
+					throw Error("Returned value isn't an array of strings");
+				}
+			})
+			.catch((e) => {
+				console.error(e);
+				alert('An error has occured, please try again.');
+			});
 	}
 </script>
 
 <h1>Add Data</h1>
+{#if Array.isArray(namesOfAddedData) && namesOfAddedData.length > 0}
+	<p>Names of added data</p>
+	<ul>
+		{#each namesOfAddedData as name}
+			<li>{name}</li>
+		{/each}
+	</ul>
+{/if}
 <form on:submit|preventDefault={processData}>
-	<input placeholder="Enter Your Name" bind:value={name} />
+	<label for="nameInput">Name</label>
+	<input id="nameInput" placeholder="Enter Your Name" bind:value={name} />
 	<p>Paste your data in csv format with headers</p>
 	<textarea bind:value={data} />
 	<button type="submit">Submit</button>
