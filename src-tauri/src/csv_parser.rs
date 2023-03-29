@@ -1,16 +1,16 @@
 use std::error::Error;
 
 use csv;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
-#[derive(Debug, Deserialize, PartialEq)]
+#[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct FinanceRecord {
     date: String,
     category: String,
     amount: f64,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Clone)]
 pub struct UserRecords {
     name: String,
     finances: Vec<FinanceRecord>,
