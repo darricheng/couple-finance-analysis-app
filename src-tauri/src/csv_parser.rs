@@ -39,6 +39,8 @@ pub fn parse_csv_to_state(
     csv_data: String,
     state: tauri::State<super::State>,
 ) -> Result<Vec<String>, String> {
+    // TODO: Need to parse data into something more workable, such as chrono?
+    // Have to see how date objects are passed between front and back by Tauri
     let finance_records = vectorize_csv(csv_data).map_err(|e| e.to_string())?;
     let data = UserRecords::new(name, finance_records);
     let mut users_vec = state.0.lock().unwrap();
