@@ -10,6 +10,7 @@
 	let validData: boolean;
 	let endOfHeaders = 0;
 	let namesOfAddedData: string[];
+	let dateFormat: string;
 
 	function processData() {
 		endOfHeaders = data.search(/\r?\n/);
@@ -32,7 +33,7 @@
 		let validCsv = mappedHeaders.join(',') + data.slice(endOfHeaders);
 
 		// TODO: handle the returned Result to show relevant success/failure messages to the user
-		invoke('parse_csv_to_state', { csvData: validCsv, name })
+		invoke('parse_csv_to_state', { csvData: validCsv, name, userDateFormat: dateFormat })
 			.then((value) => {
 				if (Array.isArray(value) && typeof value[0] === 'string') {
 					// Clear fields
@@ -70,6 +71,10 @@
 	<textarea bind:value={data} />
 	<button type="submit">Submit</button>
 </form>
+
+<p>Enter your date format</p>
+<label for="dateFormat">Date Format</label>
+<input id="dateFormat" placeholder="E.g. yyyy-mm-dd" bind:value={dateFormat} />
 
 {#if headers.length >= 3}
 	<h2>Map your columns to the required data columns</h2>
