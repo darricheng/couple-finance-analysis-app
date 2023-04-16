@@ -12,10 +12,58 @@ pub struct FinanceRecord {
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
-struct FinanceRecordCsv {
+pub struct FinanceRecordCsv {
     date: String,
     category: String,
     amount: f64,
+}
+
+impl FinanceRecord {
+    fn new(date: NaiveDate, category: String, amount: f64) -> FinanceRecord {
+        FinanceRecord {
+            date,
+            category,
+            amount,
+        }
+    }
+
+    pub fn from_csv_record(
+        csv_record: FinanceRecordCsv,
+        order: &Vec<String>,
+        delimeter: &String,
+    ) -> FinanceRecord {
+        let date_str = &csv_record.date;
+
+        let mut date_numbers: Vec<u32> = Vec::new();
+        for num in date_str.split(delimeter) {
+            date_numbers.push(num.parse::<u32>().unwrap());
+        }
+
+        let mut day = 0;
+        let mut month = 0;
+        let mut year = 0;
+
+        for (i, num) in date_numbers.iter().enumerate() {
+            match order[i].as_str() {
+                "d" => {
+                    day = *num;
+                }
+                "m" => {
+                    month = *num;
+                }
+                "y" => {
+                    year = *num;
+                }
+                _ => {
+                    panic!("Invalid date format.");
+                }
+            }
+        }
+
+        let date_obj = NaiveDate::from_ymd_opt(year.try_into().unwrap(), month, day).unwrap();
+
+        FinanceRecord::new(date_obj, csv_record.category, csv_record.amount)
+    }
 }
 
 #[derive(Debug, Serialize, Clone)]
@@ -46,7 +94,53 @@ fn format_csv_date(
     string_date_csv: Vec<FinanceRecordCsv>,
     date_format: String,
 ) -> Vec<FinanceRecord> {
-    todo!()
+    let lowercase_date_format = date_format.to_lowercase();
+
+    let mut d = false;
+    let mut m = false;
+    let mut y = false;
+
+    let mut delimeter = String::new();
+
+    let mut order: Vec<String> = Vec::new();
+
+    for c in lowercase_date_format.chars() {
+        match c {
+            'd' => {
+                if d {
+                    continue;
+                }
+                d = true;
+                order.push("d".to_string());
+            }
+            'm' => {
+                if m {
+                    continue;
+                }
+                m = true;
+                order.push("m".to_string());
+            }
+            'y' => {
+                if y {
+                    continue;
+                }
+                y = true;
+                order.push("y".to_string());
+            }
+            _ => {
+                delimeter = c.to_string();
+            }
+        }
+    }
+
+    let mut finance_records: Vec<FinanceRecord> = Vec::new();
+
+    // Convert the string dates to NaiveDates.
+    for record in string_date_csv.into_iter() {
+        finance_records.push(FinanceRecord::from_csv_record(record, &order, &delimeter));
+    }
+
+    finance_records
 }
 
 /// user_date_format will be the string entered by the user indicating the format of their dates.
@@ -71,6 +165,7 @@ pub fn parse_csv_to_state(
     for user in users_vec.iter() {
         names.push(user.name.clone())
     }
+
     Ok(names)
 }
 
