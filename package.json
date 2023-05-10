@@ -30,6 +30,8 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"@tauri-apps/api": "2.0.0-alpha.1"
+		"@tauri-apps/api": "2.0.0-alpha.1",
+		"chart.js": "^4.3.0",
+		"svelte-chartjs": "^3.1.2"
 	}
 }
