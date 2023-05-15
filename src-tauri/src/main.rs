@@ -16,7 +16,8 @@ fn main() {
         .manage(State(Mutex::new(vec![])))
         .invoke_handler(tauri::generate_handler![
             csv_parser::parse_csv_to_state,
-            get_data::get_state
+            get_data::get_state,
+            get_data::get_data_by_categories
         ])
         .run(tauri::generate_context!())
         .expect("error while running tauri application");

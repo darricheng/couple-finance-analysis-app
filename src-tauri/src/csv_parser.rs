@@ -6,9 +6,9 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
 pub struct FinanceRecord {
-    date: NaiveDate,
-    category: String,
-    amount: f64,
+    pub date: NaiveDate,
+    pub category: String,
+    pub amount: f64,
 }
 
 #[derive(Debug, Serialize, Deserialize, PartialEq, Clone)]
@@ -69,7 +69,7 @@ impl FinanceRecord {
 #[derive(Debug, Serialize, Clone)]
 pub struct UserRecords {
     name: String,
-    finances: Vec<FinanceRecord>,
+    pub finances: Vec<FinanceRecord>,
 }
 
 impl UserRecords {
@@ -166,6 +166,7 @@ pub fn parse_csv_to_state(
         names.push(user.name.clone())
     }
 
+    println!("Users: {:?}", users_vec);
     Ok(names)
 }
 
