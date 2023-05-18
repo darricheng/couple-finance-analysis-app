@@ -4,7 +4,7 @@
 	let data;
 	async function getData() {
 		try {
-			data = await invoke('get_state');
+			data = await invoke('get_data_by_categories');
 			console.log(data);
 		} catch (e) {
 			console.error(e);

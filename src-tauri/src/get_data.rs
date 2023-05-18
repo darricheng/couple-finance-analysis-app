@@ -25,13 +25,9 @@ impl ByCategories {
 /// This function will return a struct with two keys, "category" and "total".
 /// Each key will have a value of a string vector and a float vector respectively.
 /// The index of the string vector will correspond to the index of the float vector.
-#[tauri::command]
-pub fn get_data_by_categories(state: tauri::State<super::State>) -> ByCategories {
+fn sum_by_categories(data: Vec<UserRecords>) -> (Vec<String>, Vec<f64>) {
     let mut categories: Vec<String> = Vec::new();
     let mut totals: Vec<f64> = Vec::new();
-
-    let data = state.0.lock().unwrap().to_vec();
-
     for user in data {
         for record in user.finances {
             if categories.contains(&record.category) {
@@ -47,7 +43,75 @@ pub fn get_data_by_categories(state: tauri::State<super::State>) -> ByCategories
         }
     }
 
+    (categories, totals)
+}
+
+#[tauri::command]
+pub fn get_data_by_categories(state: tauri::State<super::State>) -> ByCategories {
+    let data = state.0.lock().unwrap().to_vec();
+
+    let (categories, totals) = sum_by_categories(data);
+
     // ! NOT TESTED YET
-    todo!();
+    // todo!();
+    // Need to round the totals to 2 decimal places.
     ByCategories::new(categories, totals)
+}
+
+#[cfg(test)]
+mod tests {
+    use chrono::NaiveDate;
+
+    use super::*;
+    use crate::csv_parser::FinanceRecord;
+
+    #[test]
+    fn get_totals_by_categories() {
+        let data = vec![
+            UserRecords::new(
+                "Test User".to_string(),
+                vec![
+                    FinanceRecord::new(
+                        NaiveDate::from_ymd_opt(2021, 1, 1).unwrap(),
+                        "Test Category".to_string(),
+                        10.0,
+                    ),
+                    FinanceRecord::new(
+                        NaiveDate::from_ymd_opt(2021, 1, 1).unwrap(),
+                        "Test Category".to_string(),
+                        10.0,
+                    ),
+                    FinanceRecord::new(
+                        NaiveDate::from_ymd_opt(2021, 1, 1).unwrap(),
+                        "Test Category 2".to_string(),
+                        10.0,
+                    ),
+                ],
+            ),
+            UserRecords::new(
+                "Test User 2".to_string(),
+                vec![
+                    FinanceRecord::new(
+                        NaiveDate::from_ymd_opt(2021, 1, 1).unwrap(),
+                        "Test Category".to_string(),
+                        10.0,
+                    ),
+                    FinanceRecord::new(
+                        NaiveDate::from_ymd_opt(2021, 1, 1).unwrap(),
+                        "Test Category 2".to_string(),
+                        10.0,
+                    ),
+                ],
+            ),
+        ];
+
+        let (categories, totals) = sum_by_categories(data);
+
+        assert_eq!(categories.len(), 2);
+        assert_eq!(totals.len(), 2);
+        assert_eq!(categories[0], "Test Category");
+        assert_eq!(categories[1], "Test Category 2");
+        assert_eq!(totals[0], 30.0);
+        assert_eq!(totals[1], 20.0);
+    }
 }

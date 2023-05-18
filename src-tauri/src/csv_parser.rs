@@ -19,7 +19,7 @@ pub struct FinanceRecordCsv {
 }
 
 impl FinanceRecord {
-    fn new(date: NaiveDate, category: String, amount: f64) -> FinanceRecord {
+    pub fn new(date: NaiveDate, category: String, amount: f64) -> FinanceRecord {
         FinanceRecord {
             date,
             category,
