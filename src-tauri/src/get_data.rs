@@ -43,6 +43,11 @@ fn sum_by_categories(data: Vec<UserRecords>) -> (Vec<String>, Vec<f64>) {
         }
     }
 
+    // Round the totals to 2 decimal places
+    for num in totals.iter_mut() {
+        *num = (*num * 100.0).round() / 100.0;
+    }
+
     (categories, totals)
 }
 
@@ -52,9 +57,6 @@ pub fn get_data_by_categories(state: tauri::State<super::State>) -> ByCategories
 
     let (categories, totals) = sum_by_categories(data);
 
-    // ! NOT TESTED YET
-    // todo!();
-    // Need to round the totals to 2 decimal places.
     ByCategories::new(categories, totals)
 }
 
@@ -67,6 +69,7 @@ mod tests {
 
     #[test]
     fn get_totals_by_categories() {
+        // Add test case that requires rounding the decimal places
         let data = vec![
             UserRecords::new(
                 "Test User".to_string(),
@@ -74,12 +77,12 @@ mod tests {
                     FinanceRecord::new(
                         NaiveDate::from_ymd_opt(2021, 1, 1).unwrap(),
                         "Test Category".to_string(),
-                        10.0,
+                        10.0123,
                     ),
                     FinanceRecord::new(
                         NaiveDate::from_ymd_opt(2021, 1, 1).unwrap(),
                         "Test Category".to_string(),
-                        10.0,
+                        10.456,
                     ),
                     FinanceRecord::new(
                         NaiveDate::from_ymd_opt(2021, 1, 1).unwrap(),
@@ -111,7 +114,7 @@ mod tests {
         assert_eq!(totals.len(), 2);
         assert_eq!(categories[0], "Test Category");
         assert_eq!(categories[1], "Test Category 2");
-        assert_eq!(totals[0], 30.0);
+        assert_eq!(totals[0], 30.47);
         assert_eq!(totals[1], 20.0);
     }
 }
